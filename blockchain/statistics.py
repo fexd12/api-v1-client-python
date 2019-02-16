@@ -9,11 +9,11 @@ import json
 
 def get(api_code=None):
     """Get network statistics.
-    
+
     :param str api_code: Blockchain.info API code (optional)
     :return: an instance of :class:`Stats` class
     """
-    
+
     resource = 'stats?format=json'
     if api_code is not None:
         resource += '&api_code=' + api_code
@@ -22,7 +22,7 @@ def get(api_code=None):
     return Stats(json_response)
 
 
-def get_chart(chart_type, time_span=None, rolling_average=None, api_code=None):
+def get_chart(chart_type, time_span=None, rolling_average=None, start=None, sampled=None, api_code=None):
     """Get chart data of a specific chart type.
 
     :param str chart_type: type of chart
@@ -30,6 +30,8 @@ def get_chart(chart_type, time_span=None, rolling_average=None, api_code=None):
     Default is 1 year for most charts, 1 week for mempool charts (optional)
     (Example: 5weeks)
     :param str rolling_average: duration over which the data should be averaged (optional)
+    :param str start: datetime at which to start the chart. (Optional)
+    :param str set to 'true' or 'false' (default 'true'). If true, limits the number of datapoints returned to ~1.5k for performance reasons. (Optional)
     :param str api_code: Blockchain.info API code (optional)
     :return: an instance of :class:`Chart` class
     """
@@ -39,6 +41,10 @@ def get_chart(chart_type, time_span=None, rolling_average=None, api_code=None):
         resource += '&timespan=' + time_span
     if rolling_average is not None:
         resource += '&rollingAverage=' + rolling_average
+    if start is not None:
+        resource += '&start=' + start
+    if sampled is not None:
+        resource += '&sampled=' + sampled
     if api_code is not None:
         resource += '&api_code=' + api_code
     response = util.call_api(resource)
